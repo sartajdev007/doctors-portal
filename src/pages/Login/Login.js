@@ -4,9 +4,10 @@ import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthProvider';
 
+
 const Login = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
-    const { logIn } = useContext(AuthContext)
+    const { logIn, googleLogin } = useContext(AuthContext)
     const [logInErr, setLogInErr] = useState('')
     const location = useLocation()
     const navigate = useNavigate()
@@ -24,6 +25,10 @@ const Login = () => {
                 navigate(from, { replace: true })
             })
             .catch(err => setLogInErr(err.message))
+    }
+
+    const handleGoogleLogIn = () => {
+        googleLogin()
     }
 
     return (
@@ -62,7 +67,7 @@ const Login = () => {
                 </form>
                 <p className='pt-5'>New to Doctors Portal? <Link className='text-secondary' to='/signup'>Create An Account</Link></p>
                 <div className="divider">OR</div>
-                <button className='btn btn-outline w-full'>CONTINUE WITH GOOGLE</button>
+                <button onClick={handleGoogleLogIn} className='btn btn-outline w-full'>CONTINUE WITH GOOGLE</button>
             </div>
         </div>
     );
