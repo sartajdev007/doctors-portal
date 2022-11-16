@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { themeChange } from 'theme-change';
 import { AuthContext } from '../../../context/AuthProvider';
 
 const NavBar = () => {
@@ -10,6 +11,9 @@ const NavBar = () => {
             .then(() => { })
             .catch(err => console.log(err))
     }
+    useEffect(() => {
+        themeChange(false);
+    }, []);
 
     const menuItems = <React.Fragment>
         <li><Link to='/'>Home</Link></li>
@@ -21,7 +25,21 @@ const NavBar = () => {
                 <li><button onClick={handleLogOut}>Log Out</button></li>
             </>
             :
-            <li><Link to='/login'>Login</Link></li>}
+            <li><Link to='/login'>Login</Link></li>
+        }
+        <li>
+            <select data-choose-theme>
+                <option disabled value="">
+                    Pick a theme
+                </option>
+                <option value="">Default</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="retro">Retro</option>
+                <option value="business">Business</option>
+                <option value="cyberpunk">Cyberpunk</option>
+            </select>
+        </li>
     </React.Fragment>
 
     return (

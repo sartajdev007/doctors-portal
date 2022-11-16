@@ -7,7 +7,7 @@ import { AuthContext } from '../../context/AuthProvider';
 
 const Login = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
-    const { logIn, googleLogin } = useContext(AuthContext)
+    const { logIn, googleLogin, resetEmail } = useContext(AuthContext)
     const [logInErr, setLogInErr] = useState('')
     const location = useLocation()
     const navigate = useNavigate()
@@ -26,6 +26,10 @@ const Login = () => {
             })
             .catch(err => setLogInErr(err.message))
     }
+
+    // const handleReset = data => {
+    //     resetEmail(data.email)
+    // }
 
     const handleGoogleLogIn = () => {
         googleLogin()
@@ -57,7 +61,7 @@ const Login = () => {
                             {...register("password", { required: "Password is required", minLength: { value: 6, message: 'Must Be 6 Characters' } })} />
                         {errors.password && <p role="alert" className='text-red-600'>{errors.password?.message}</p>}
                         <label className="label">
-                            <span className="label-text">Forget Password</span>
+                            <button className="label-text">Forget Password</button>
                         </label>
                     </div>
                     <input className='btn btn-accent w-full' type="submit" value='Login' />
