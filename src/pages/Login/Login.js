@@ -3,16 +3,23 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthProvider';
+import useToken from '../../hooks/useToken';
 
 
 const Login = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
-    const { logIn, googleLogin, resetEmail } = useContext(AuthContext)
+    const { logIn, googleLogin } = useContext(AuthContext)
     const [logInErr, setLogInErr] = useState('')
+    const [logUserEmail, setLogUserEmail] = useState('')
+    const [token] = useToken(logUserEmail)
     const location = useLocation()
     const navigate = useNavigate()
 
     const from = location.state?.from?.pathname || '/'
+
+    if (token) {
+        navigate(from, { replace: true })
+    }
 
     const handleLogin = data => {
         console.log(data)
@@ -20,9 +27,8 @@ const Login = () => {
         logIn(data.email, data.password)
             .then(result => {
                 const user = result.user
-                data.reset()
                 console.log(user)
-                navigate(from, { replace: true })
+                setLogUserEmail(data.email)
             })
             .catch(err => setLogInErr(err.message))
     }

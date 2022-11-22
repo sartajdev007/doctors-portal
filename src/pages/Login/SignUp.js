@@ -4,13 +4,20 @@ import { Toaster } from 'react-hot-toast';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthProvider';
+import useToken from '../../hooks/useToken';
 
 const SignUp = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
     const { signInUser, updateUser, googleLogin } = useContext(AuthContext)
     const [signUpErr, setSignUpErr] = useState('')
 
+    const [createdUserEmail, setcreatedUserEmail] = useState('')
+    const [token] = useToken(createdUserEmail)
     const navigate = useNavigate()
+
+    if (token) {
+        navigate('/')
+    }
 
     const handleSignUp = data => {
         console.log(data)
@@ -24,7 +31,7 @@ const SignUp = () => {
                 }
                 updateUser(userInfo)
                     .then(() => {
-                        navigate('/')
+                        saveUser(data.name, data.email)
                     })
                     .catch(err => console.error(err))
 
@@ -34,6 +41,24 @@ const SignUp = () => {
                 setSignUpErr(err.message)
             })
     }
+
+    const saveUser = (name, email) => {
+        const user = { name, email }
+        fetch('https://doctors-portal-server-sartajdev007.vercel.app/users', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+            .then(res => res.json())
+            .then(data => {
+                setcreatedUserEmail(email)
+            })
+    }
+
+
+
     const handleGoogleLogIn = () => {
         googleLogin()
     }
